@@ -34,7 +34,7 @@ Welcome to the GameList Manager repository! This project utilizes Bootstrap 5 fo
 ## Installation
 
 - Clone the repository:
-  `git clone https://github.com/web-rest-api/tp-1-bootstrap.git`
+  `git clone https://github.com/web-rest-api/tp2-bootstrap-js`
 - Open the project in your preferred code editor.
 
 - Launch the index.html file in a web browser.
