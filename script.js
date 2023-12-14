@@ -2,43 +2,43 @@ const gamesList = [
 	{
 		title: "Tekken",
 		year: 1994,
-		imgaueUrl:
+		imageUrl:
 			"https://cdn.dashfight.com/bcf6a9046a9ea4c1070d4aedb2981103c978a704.png",
 	},
 	{
 		title: "Minecraft",
 		year: 2009,
-		imgaueUrl:
+		imageUrl:
 			"https://m.media-amazon.com/images/I/61smNbXSW1L._AC_UF1000,1000_QL80_.jpg",
 	},
 	{
 		title: "Assasin's Creed Unity",
 		year: 2014,
-		imgaueUrl:
+		imageUrl:
 			"https://www.trustedreviews.com/wp-content/uploads/sites/54/2014/06/AC-Unity-8-1-1.jpg",
 	},
 	{
 		title: "Elden Ring",
 		year: 2022,
-		imgaueUrl:
+		imageUrl:
 			"https://pic.clubic.com/v1/images/1934271/raw?fit=smartCrop&width=1200&height=675&hash=e7519a9577a2b7291fa26880bb22bed6740836be",
 	},
 	{
 		title: "Street Fighter V",
 		year: 2015,
-		imgaueUrl:
+		imageUrl:
 			"https://gaming-cdn.com/images/products/671/orig/street-fighter-v-pc-jeu-steam-cover.jpg?v=1662539255",
 	},
 	{
 		title: "Half Life 2",
 		year: 2004,
-		imgaueUrl:
+		imageUrl:
 			"https://gaming-cdn.com/images/products/2284/orig/half-life-2-pc-mac-game-steam-cover.jpg?v=1650555068",
 	},
 	{
 		title: "Skyrim",
 		year: 2011,
-		imgaueUrl:
+		imageUrl:
 			"https://gaming-cdn.com/images/products/146/orig/the-elder-scrolls-v-skyrim-pc-jeu-steam-europe-cover.jpg?v=1661270991",
 	},
 ]
@@ -54,7 +54,7 @@ gamesList.forEach((game) => {
 	articleContainer.innerHTML += `
     <article class="col">
        <div class="card shadow-sm">
-          <img src="${game.imgaueUrl}" class="card-img-top" alt="${game.title}">
+          <img src="${game.imageUrl}" class="card-img-top" alt="${game.title}">
           <div class="card-body">
               <h3 class="card-title">${game.title}</h3>
               <p class="card-text">Year: ${game.year}</p>
@@ -92,8 +92,8 @@ viewBtnList.forEach((truc, index) => {
 	truc.addEventListener("click", () => {
 		console.log("tu as clicke mon gars " + gamesList[index].title)
 		modalTitle.innerHTML = gamesList[index].title
-		modalBody.innerHTML = `<img src="${gamesList[index].imgaueUrl}" class="img-fluid" alt="${gamesList[index].title}">`
-		modaFooter.innerHTML = `
+		modalBody.innerHTML = `<img src="${gamesList[index].imageUrl}" class="img-fluid" alt="${gamesList[index].title}">`
+		modalFooter.innerHTML = `
             <button type="button" class="btn btn-secondary"
                 data-bs-dismiss="modal"
             >Close
@@ -119,8 +119,8 @@ editBtnList.forEach((btn, index) => {
                 </div>
                 <div class="mb-3">
                     <label for="imageUrl" class="form-label">Image Url</label>
-                    <input type="text" class="form-control" id="imageUrl" aria-describedby="titleHelp" value="${gamesList[index].imgaueUrl}" >
-                    <img class="img-thumbnail mt-2" src="${gamesList[index].imgaueUrl}" >
+                    <input type="text" class="form-control" id="imageUrl" aria-describedby="titleHelp" value="${gamesList[index].imageUrl}" >
+                    <img class="img-thumbnail mt-2" src="${gamesList[index].imageUrl}" >
                 </div>
             
         `
@@ -140,7 +140,31 @@ editBtnList.forEach((btn, index) => {
 			const newTitle = document.querySelector("#title").value
 			const newYear = document.querySelector("#year").value
 			const newImgUrl = document.querySelector("#imageUrl").value
+			/*  empty fields  */
+			if (newTitle === "" || newYear === "" || newImgUrl === "") {
+				alert("Certaines parties de votre formulaire sont vides")
+				return
+			}
 			console.log(newTitle, newYear, newImgUrl)
+			/*  odd characters  */
+			const alphanumericRegex = /^[a-zA-Z0-9/.:-_ 'éùçà()&?]+$/
+			if (
+				!alphanumericRegex.test(newTitle) ||
+				!alphanumericRegex.test(newYear)
+			) {
+				alert("Certaines characters sont pas vailde")
+				return
+			}
+			/*   enregistrer */
+			// console.log(newTitle, newImage, newYear, indx)
+			gamesList[index].title = newTitle
+			gamesList[index].year = newYear
+			gamesList[index].imageUrl = newImgUrl
+
+			document.querySelectorAll(".card-title")[index].innerHTML = newTitle
+			document.querySelectorAll(".card-text")[index].innerHTML =
+				"Year: " + newYear
+			document.querySelectorAll(".card-img-top")[index].src = newImgUrl
 		})
 	})
 })
