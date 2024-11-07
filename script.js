@@ -63,19 +63,25 @@ function viewModal(gameId) {
 	// console.log(gameId, gamesList)
 	// Trouvez le jeu en fonction de son identifiant
 	const result = gamesList.findIndex((game) => game.id === parseInt(gameId))
-	document.querySelector(".modal-title").textContent = gamesList[result].title
+	// passer une image comme corps du modal
+	const modalBody = `<img src="${gamesList[result].imageUrl}" alt="${gamesList[result].title}" class="img-fluid" />`
+	modifyModal(gamesList[result].title, modalBody)
 }
 
 function editModal(gameId) {
 	// console.log(gameId, gamesList)
 	// Trouvez le jeu en fonction de son identifiant
 	const result = gamesList.findIndex((game) => game.id === parseInt(gameId))
-	document.querySelector(".modal-title").textContent = "Mode Edition"
+	// passer une image comme corps du modal
+	const modalBody = `<h4>ajoutez un formulaire pour modifier le jeu ici</h4>`
+	modifyModal("Mode Edition", modalBody)
 }
 
-function modifyModal(modalTitle) {
-	// Écrir le nom du jeu dans le titre du modal
+function modifyModal(modalTitle, modalBody) {
+	// Écrire le nom du jeu dans le titre du modal
 	document.querySelector(".modal-title").textContent = modalTitle
+	// Écrire dans le corps du modal
+	document.querySelector(".modal-body").innerHTML = modalBody
 }
 
 function writeDom() {
