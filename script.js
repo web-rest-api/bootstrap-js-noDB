@@ -43,6 +43,23 @@ const gamesList = [
 	},
 ]
 
+writeDom()
+
+const editButtons = document.querySelectorAll(".edit")
+editButtons.forEach((btn) => {
+	btn.addEventListener("click", (e) => {
+		editModal(e.target.getAttribute("data-edit-id"))
+	})
+})
+
+function editModal(gameId) {
+	// console.log(gameId, gamesList)
+	const result = gamesList.findIndex((game) => game.id === parseInt(gameId))
+	const modalTitle = (document.querySelector(".modal-title").textContent =
+		gamesList[result].title)
+	console.log(gamesList[result])
+}
+
 function writeDom() {
 	gamesList.forEach((game) => {
 		const articleContainer = document.querySelector(".row")
@@ -68,8 +85,9 @@ function writeDom() {
 											</button>
 											<button
 												type="button"
-												class="btn btn-sm btn-outline-secondary"
+												class="btn btn-sm btn-outline-secondary edit"
 												data-bs-toggle="modal" data-bs-target="#exampleModal"
+												data-edit-id="${game.id}"
 											>
 												Edit
 											</button>
@@ -80,8 +98,6 @@ function writeDom() {
 						</article>`
 	})
 }
-
-writeDom()
 
 /*  modal  */
 const modalTitle = document.querySelector(".modal-title")
