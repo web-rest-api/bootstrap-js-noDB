@@ -54,10 +54,14 @@ editButtons.forEach((btn) => {
 
 function editModal(gameId) {
 	// console.log(gameId, gamesList)
+	// Trouvez le jeu en fonction de son identifiant
 	const result = gamesList.findIndex((game) => game.id === parseInt(gameId))
-	const modalTitle = (document.querySelector(".modal-title").textContent =
-		gamesList[result].title)
-	console.log(gamesList[result])
+	modifyModal("Mode édition")
+}
+
+function modifyModal(modalTitle) {
+	// Écrir le nom du jeu dans le titre du modal
+	document.querySelector(".modal-title").textContent = modalTitle
 }
 
 function writeDom() {
