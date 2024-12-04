@@ -45,14 +45,14 @@ const gamesList = [
 
 writeDom()
 
-const editButtons = document.querySelectorAll(".edit")
+let editButtons = document.querySelectorAll(".edit")
 editButtons.forEach((btn) => {
 	btn.addEventListener("click", (e) => {
 		editModal(e.target.getAttribute("data-edit-id"))
 	})
 })
 
-const viewButtons = document.querySelectorAll(".view")
+let viewButtons = document.querySelectorAll(".view")
 viewButtons.forEach((btn) => {
 	btn.addEventListener("click", (e) => {
 		viewModal(e.target.getAttribute("data-edit-id"))
@@ -66,19 +66,43 @@ function viewModal(gameId) {
 	// passer une image comme corps du modal
 	const modalBody = `<img src="${gamesList[result].imageUrl}" alt="${gamesList[result].title}" class="img-fluid" />`
 	modifyModal(gamesList[result].title, modalBody)
+	// edit footer
+	// Écrire dans le footer
+	document.querySelector(".modal-footer").innerHTML = `
+		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+			Close
+		</button>
+</form>`
 }
 
 function editModal(gameId) {
-	// console.log(gameId, gamesList)
 	// Trouvez le jeu en fonction de son identifiant
 	const result = gamesList.findIndex((game) => game.id === parseInt(gameId))
+	// Injectez le formulaire dans le corps du modal
 	fetch("./form.html").then((data) => {
 		data.text().then((form) => {
+			// Modifiez le titre et le corps du modal
+			const selectedGame = gamesList[result]
 			modifyModal("Mode Edition", form)
+			modifyFom({
+				title: selectedGame.title,
+				year: selectedGame.year,
+				imageUrl: selectedGame.imageUrl,
+			})
+			document
+				.querySelector('button[type="submit"]')
+				.addEventListener("click", () =>
+					updateGames(title.value, year.value, imageUrl.value, gameId)
+				)
 		})
 	})
-	// passer une image comme corps du modal
-	// const modalBody = `<h4>ajoutez un formulaire pour modifier le jeu ici</h4>`
+}
+
+function modifyFom(gameData) {
+	const form = document.querySelector("form")
+	form.title.value = gameData.title
+	form.year.value = gameData.year
+	form.imageUrl.value = gameData.imageUrl
 }
 
 function modifyModal(modalTitle, modalBody) {
@@ -86,6 +110,13 @@ function modifyModal(modalTitle, modalBody) {
 	document.querySelector(".modal-title").textContent = modalTitle
 	// Écrire dans le corps du modal
 	document.querySelector(".modal-body").innerHTML = modalBody
+	// Écrire dans le footer
+	document.querySelector(".modal-footer").innerHTML = `
+		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+			Close
+		</button>
+		<button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Submit</button>
+</form>`
 }
 
 function writeDom() {
@@ -128,126 +159,36 @@ function writeDom() {
 	})
 }
 
+function updateGames(title, year, imageUrl, gameId) {
+	// Trouvez le jeu en fonction de son identifiant
+	const index = gamesList.findIndex((game) => game.id === parseInt(gameId))
+
+	gamesList[index].title = title
+	gamesList[index].year = year
+	gamesList[index].imageUrl = imageUrl
+	document.querySelector(".row").innerHTML = "" // Nous supprimons toutes les données des jeux dans le DOM.
+	writeDom()
+	editButtons = document.querySelectorAll(".edit")
+	editButtons.forEach((btn) => {
+		btn.addEventListener("click", (e) => {
+			editModal(e.target.getAttribute("data-edit-id"))
+		})
+	})
+
+	viewButtons = document.querySelectorAll(".view")
+	viewButtons.forEach((btn) => {
+		btn.addEventListener("click", (e) => {
+			viewModal(e.target.getAttribute("data-edit-id"))
+		})
+	})
+}
+
 /*  modal  */
 const modalTitle = document.querySelector(".modal-title")
 const modalBody = document.querySelector(".modal-body")
 const modalFooter = document.querySelector(".modal-footer")
 
-// gamesList.forEach((game) => {
-// 	articleContainer.innerHTML += `
-//     <article class="col">
-//        <div class="card shadow-sm">
-//           <img src="${game.imageUrl}" class="card-img-top" alt="${game.title}">
-//           <div class="card-body">
-//               <h3 class="card-title">${game.title}</h3>
-//               <p class="card-text">Year: ${game.year}</p>
-//               <div class="btn-group">
-//                 <button
-//                     type="button"
-//                     class="btn btn-sm btn-outline-dark view"
-//                     data-bs-toggle="modal"
-// 			        data-bs-target="#gameModal"
-//                 >
-//                     View
-//                 </button>
-//                 <button
-//                     type="button"
-//                     class="btn btn-sm btn-outline-dark edit"
-//                     data-bs-toggle="modal"
-// 			        data-bs-target="#gameModal"
-//                 >
-//                     Edit
-//                 </button>
-//             </div>
-//           </div>
-//        </div>
-//     </article>
-
-//     `
-// })
-
 /* ELEMENT DYNAMIQUE DU DOM  */
 
 const viewBtnList = document.querySelectorAll(".view")
 const editBtnList = document.querySelectorAll(".edit")
-
-// viewBtnList.forEach((truc, index) => {
-// 	truc.addEventListener("click", () => {
-// 		console.log("tu as clicke mon gars " + gamesList[index].title)
-// 		modalTitle.innerHTML = gamesList[index].title
-// 		modalBody.innerHTML = `<img src="${gamesList[index].imageUrl}" class="img-fluid" alt="${gamesList[index].title}">`
-// 		modalFooter.innerHTML = `
-//             <button type="button" class="btn btn-secondary"
-//                 data-bs-dismiss="modal"
-//             >Close
-//             </button>
-//         `
-// 	})
-// })
-
-// editBtnList.forEach((btn, index) => {
-// 	btn.addEventListener("click", () => {
-// 		modalTitle.innerHTML = "Edit mode"
-// 		modalBody.innerHTML = `
-//             <form>
-//                 <div class="mb-3">
-//                     <label for="title" class="form-label">Title</label>
-//                     <input type="text" class="form-control" id="title" aria-describedby="titleHelp" value="${gamesList[index].title}" >
-
-//                 </div>
-//                 <div class="mb-3">
-//                     <label for="year" class="form-label">Year</label>
-//                     <input type="number" class="form-control" id="year" aria-describedby="titleYear" value="${gamesList[index].year}" >
-
-//                 </div>
-//                 <div class="mb-3">
-//                     <label for="imageUrl" class="form-label">Image Url</label>
-//                     <input type="text" class="form-control" id="imageUrl" aria-describedby="titleHelp" value="${gamesList[index].imageUrl}" >
-//                     <img class="img-thumbnail mt-2" src="${gamesList[index].imageUrl}" >
-//                 </div>
-
-//         `
-// 		modalFooter.innerHTML = `
-// 		<button type="button"
-// 			class="btn btn-secondary" data-bs-dismiss="modal"
-// 						>
-// 							Close
-// 						</button>
-// 			<button type="submit" class="btn btn-primary submit"
-// 			data-bs-dismiss="modal">Submit</button>
-// 			</form>
-// 		`
-// 		const btnSubmit = document.querySelector(".submit")
-// 		btnSubmit.addEventListener("click", () => {
-// 			// recuperer les donnes du formulaire
-// 			const newTitle = document.querySelector("#title").value
-// 			const newYear = document.querySelector("#year").value
-// 			const newImgUrl = document.querySelector("#imageUrl").value
-// 			/*  empty fields  */
-// 			if (newTitle === "" || newYear === "" || newImgUrl === "") {
-// 				alert("Certaines parties de votre formulaire sont vides")
-// 				return
-// 			}
-// 			console.log(newTitle, newYear, newImgUrl)
-// 			/*  odd characters  */
-// 			const alphanumericRegex = /^[a-zA-Z0-9/.:-_ 'éùçà()&?]+$/
-// 			if (
-// 				!alphanumericRegex.test(newTitle) ||
-// 				!alphanumericRegex.test(newYear)
-// 			) {
-// 				alert("Certaines characters sont pas vailde")
-// 				return
-// 			}
-// 			/*   enregistrer */
-// 			// console.log(newTitle, newImage, newYear, indx)
-// 			gamesList[index].title = newTitle
-// 			gamesList[index].year = newYear
-// 			gamesList[index].imageUrl = newImgUrl
-
-// 			document.querySelectorAll(".card-title")[index].innerHTML = newTitle
-// 			document.querySelectorAll(".card-text")[index].innerHTML =
-// 				"Year: " + newYear
-// 			document.querySelectorAll(".card-img-top")[index].src = newImgUrl
-// 		})
-// 	})
-// })
