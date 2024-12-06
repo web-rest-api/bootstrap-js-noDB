@@ -8,16 +8,20 @@ fetch("http://localhost:3000/api/cars", {
 		"Content-Type": "application/json",
 		Accept: "application/json",
 	},
-}).then((res) => {
-	if (!res.ok) {
-		console.log("something went very wrong !!!")
-	}
-	res.json().then((data) => {
-		console.log(data)
-		carsList = data
-		writeDom()
-	})
 })
+	.then((res) => {
+		if (!res.ok) {
+			console.log("your API isn't working !!!")
+		}
+		res.json().then((data) => {
+			console.log(data)
+			carsList = data // Mise à jour de la liste des voitures avec les données récupérées
+			writeDom()
+		})
+	})
+	.catch((error) =>
+		console.error("Erreur lors de la récupération des voitures :", error)
+	)
 
 let editButtons = document.querySelectorAll(".edit")
 editButtons.forEach((btn) => {
