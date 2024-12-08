@@ -80,6 +80,7 @@ function logIn(formdata) {
 			return res.text().then((data) => {
 				console.log(data)
 				localStorage.setItem("_id", data)
+				window.location.pathname = "/"
 			})
 		})
 		.catch((error) => {
