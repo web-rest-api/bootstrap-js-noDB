@@ -22,13 +22,14 @@ function checkLogIn() {
 				throw new Error("Identifiants incorrects")
 			}
 			return res.json().then((data) => {
-				// console.log(data)
+				console.log(data)
 				loggedIn = true
 				console.log(loggedIn)
 				if (window.location.pathname != "/") {
 					return (window.location = "/")
 				}
-				const loggedInBtn = (document.querySelector("header").innerHTML = `
+				const loggedInBtn = document.querySelector("header")
+				loggedInBtn.innerHTML = `
 						<a
 				href="/"
 				class="d-flex align-items-center text-white text-decoration-none text-bg-secondary p-3"
@@ -40,7 +41,7 @@ function checkLogIn() {
 			>
 				<span class="fs-4 text-center">Log Out</span></button
 			>
-				`)
+				`
 
 				const logOutBtn = document.querySelector(".log-out")
 				logOutBtn.addEventListener("click", () => {
@@ -60,25 +61,3 @@ function checkLogIn() {
 }
 
 checkLogIn()
-
-const editButton = () => {
-	const divBtn = document.createElement("button")
-	divBtn.setAttribute("type", "button")
-	divBtn.setAttribute("data-bs-toggle", "modal")
-	divBtn.setAttribute("data-bs-target", "#exampleModal")
-	divBtn.setAttribute("data-edit-id", "2")
-	divBtn.innerText = "Edit"
-	return divBtn
-}
-
-console.log(editButton())
-
-// ;`
-// 											<button
-// 												type="button"
-// 												class="btn btn-sm btn-outline-secondary edit"
-// 												data-bs-toggle="modal" data-bs-target="#exampleModal"
-// 												data-edit-id="${game.id}"
-// 											>
-// 												Edit
-// 											</button>`

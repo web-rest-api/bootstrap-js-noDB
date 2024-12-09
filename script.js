@@ -18,6 +18,8 @@ fetch("http://localhost:3000/api/cars", {
 			console.log(data)
 			carsList = data // Mise à jour de la liste des voitures avec les données récupérées
 			writeDom()
+			const cardBodyArray = document.querySelectorAll(".card-body")
+			console.log(cardBodyArray, loggedIn)
 		})
 	})
 	.catch((error) =>
@@ -98,10 +100,33 @@ function modifyModal(modalTitle, modalBody) {
 </form>`
 }
 
+const editButton = () => {
+	const divBtn = document.createElement("button")
+	divBtn.setAttribute("type", "button")
+	divBtn.setAttribute("data-bs-toggle", "modal")
+	divBtn.setAttribute("data-bs-target", "#exampleModal")
+	divBtn.setAttribute("data-edit-id", "2")
+	divBtn.innerText = "Edit"
+	return divBtn
+}
+
 function writeDom() {
 	if (!carsList) return
 
 	carsList.forEach((game) => {
+		let editBtn = ""
+		if (game.userId === parseInt(localStorage.getItem("_id")))
+			editBtn = `
+		<div class="btn-group">
+											<button
+												type="button"
+												class="btn btn-sm btn-outline-secondary view"
+												data-bs-toggle="modal" data-bs-target="#exampleModal"
+												data-edit-id="${game.id}"
+											>
+												Edit
+											</button>`
+
 		const articleContainer = document.querySelector(".row")
 		articleContainer.innerHTML += `<article class="col">
 							<div class="card shadow-sm">
@@ -124,6 +149,7 @@ function writeDom() {
 											>
 												View
 											</button>
+											${editBtn}
 
 										</div>
 									</div>

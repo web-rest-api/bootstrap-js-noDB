@@ -79,7 +79,7 @@ function logIn(formdata) {
 			}
 			return res.json().then((data) => {
 				console.log(data)
-				localStorage.setItem("_id", data.id)
+				localStorage.setItem("_id", data._id)
 				localStorage.setItem("token", data.token)
 				window.location.pathname = "/"
 			})
