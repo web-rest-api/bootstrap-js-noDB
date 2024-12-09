@@ -60,3 +60,25 @@ function checkLogIn() {
 }
 
 checkLogIn()
+
+const editButton = () => {
+	const divBtn = document.createElement("button")
+	divBtn.setAttribute("type", "button")
+	divBtn.setAttribute("data-bs-toggle", "modal")
+	divBtn.setAttribute("data-bs-target", "#exampleModal")
+	divBtn.setAttribute("data-edit-id", "2")
+	divBtn.innerText = "Edit"
+	return divBtn
+}
+
+console.log(editButton())
+
+// ;`
+// 											<button
+// 												type="button"
+// 												class="btn btn-sm btn-outline-secondary edit"
+// 												data-bs-toggle="modal" data-bs-target="#exampleModal"
+// 												data-edit-id="${game.id}"
+// 											>
+// 												Edit
+// 											</button>`
