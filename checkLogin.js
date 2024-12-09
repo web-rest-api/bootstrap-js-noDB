@@ -1,7 +1,7 @@
 window.loggedIn = false
 
 function checkLogIn() {
-	const token = localStorage.getItem("_id")
+	const token = localStorage.getItem("token")
 	const url = "http://localhost:3000/api/users/check"
 	//console.log(token)
 
@@ -24,6 +24,7 @@ function checkLogIn() {
 			return res.json().then((data) => {
 				// console.log(data)
 				loggedIn = true
+				console.log(loggedIn)
 				if (window.location.pathname != "/") {
 					return (window.location = "/")
 				}
@@ -43,8 +44,8 @@ function checkLogIn() {
 
 				const logOutBtn = document.querySelector(".log-out")
 				logOutBtn.addEventListener("click", () => {
-					console.log("running out")
 					localStorage.removeItem("_id")
+					localStorage.removeItem("token")
 					window.location.pathname = "/login.html"
 				})
 

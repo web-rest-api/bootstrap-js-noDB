@@ -1,5 +1,6 @@
 // initialize variable
 let carsList
+let userId
 
 fetch("http://localhost:3000/api/cars", {
 	method: "GET",
