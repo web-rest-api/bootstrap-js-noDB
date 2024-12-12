@@ -22,13 +22,14 @@ function checkLogIn() {
 				throw new Error("Identifiants incorrects")
 			}
 			return res.json().then((data) => {
-				//console.log(data)
+				console.log(data)
 				loggedIn = true
 				//console.log(loggedIn)
 				if (window.location.pathname != "/") {
 					return (window.location = "/")
 				}
 				const loggedInBtn = document.querySelector("header")
+				const userImg = localStorage.getItem("img")
 				loggedInBtn.innerHTML = `
 						<a
 				href="/"
@@ -41,13 +42,28 @@ function checkLogIn() {
 			>
 				<span class="fs-4 text-center">Log Out</span></button
 			>
+
+			<div class="dropdown position-absolute">
+				<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+					<img src="${userImg}" alt="" width="32" height="32" class="rounded-circle me-2">
+					<strong>mdo</strong>
+				</a>
+				<ul class="dropdown-menu dropdown-menu-dark text-small shadow" style="">
+					<li><a class="dropdown-item" href="#">New car...</a></li>
+					<li><a class="dropdown-item" href="#">Profile</a></li>
+					<li><hr class="dropdown-divider"></li>
+					<li><button class="dropdown-item log-out">Sign out</button></li>
+				</ul>
+			</div>
 				`
 
-				const logOutBtn = document.querySelector(".log-out")
-				logOutBtn.addEventListener("click", () => {
-					localStorage.removeItem("_id")
-					localStorage.removeItem("token")
-					window.location.pathname = "/login.html"
+				const logOutBtns = document.querySelectorAll(".log-out")
+				logOutBtns.forEach((btn) => {
+					btn.addEventListener("click", () => {
+						localStorage.removeItem("_id")
+						localStorage.removeItem("token")
+						window.location.pathname = "./index.html"
+					})
 				})
 
 				return data

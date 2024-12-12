@@ -81,7 +81,8 @@ function logIn(formdata) {
 				console.log(data)
 				localStorage.setItem("_id", data._id)
 				localStorage.setItem("token", data.token)
-				window.location.pathname = "/"
+				localStorage.setItem("img", data.userImg)
+				// window.location.pathname = "/"
 			})
 		})
 		.catch((error) => {
