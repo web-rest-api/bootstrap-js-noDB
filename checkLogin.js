@@ -17,14 +17,14 @@ function checkLogIn() {
 	})
 		.then((res) => {
 			if (!res.ok) {
-				console.log(res)
+				//console.log(res)
 
 				throw new Error("Identifiants incorrects")
 			}
 			return res.json().then((data) => {
-				console.log(data)
+				//console.log(data)
 				loggedIn = true
-				console.log(loggedIn)
+				//console.log(loggedIn)
 				if (window.location.pathname != "/") {
 					return (window.location = "/")
 				}

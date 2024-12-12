@@ -15,23 +15,26 @@ fetch("http://localhost:3000/api/cars", {
 			console.log("your API isn't working !!!")
 		}
 		res.json().then((data) => {
-			console.log(data)
+			console.log(data, "run data fetch")
 			carsList = data // Mise à jour de la liste des voitures avec les données récupérées
 			writeDom()
 			const cardBodyArray = document.querySelectorAll(".card-body")
-			console.log(cardBodyArray, loggedIn)
+			//console.log(cardBodyArray, loggedIn)
+			let editButtons = document.querySelectorAll(".edit")
+			console.log(editButtons)
+			// wait for the end of fetch --- async code
+			editButtons.forEach((btn) => {
+				btn.addEventListener("click", (e) => {
+					console.log("run edit")
+
+					editModal(e.target.getAttribute("data-edit-id"))
+				})
+			})
 		})
 	})
 	.catch((error) =>
 		console.error("Erreur lors de la récupération des voitures :", error)
 	)
-
-let editButtons = document.querySelectorAll(".edit")
-editButtons.forEach((btn) => {
-	btn.addEventListener("click", (e) => {
-		editModal(e.target.getAttribute("data-edit-id"))
-	})
-})
 
 let viewButtons = document.querySelectorAll(".view")
 viewButtons.forEach((btn) => {
@@ -58,6 +61,28 @@ function viewModal(gameId) {
 
 function editModal(gameId) {
 	// Trouvez le jeu en fonction de son identifiant
+	console.log(gameId)
+	// fetch car by ID // http://localhost:3000/api/cars/1
+	fetch(`http://localhost:3000/api/cars/${gameId}`, {
+		method: "GET",
+		headers: {
+			"x-api-key": "secret_phrase_here",
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+	})
+		.then((res) => {
+			if (!res.ok) {
+				throw new Error("Error with the car with this id")
+			}
+			res.json().then((data) => {
+				console.log(data)
+			})
+		})
+		.catch((error) =>
+			console.error("Erreur lors de la récupération des voitures :", error)
+		)
+
 	const result = carsList.findIndex((game) => game.id === parseInt(gameId))
 	// Injectez le formulaire dans le corps du modal
 	fetch("./form.html").then((data) => {
@@ -100,15 +125,15 @@ function modifyModal(modalTitle, modalBody) {
 </form>`
 }
 
-const editButton = () => {
-	const divBtn = document.createElement("button")
-	divBtn.setAttribute("type", "button")
-	divBtn.setAttribute("data-bs-toggle", "modal")
-	divBtn.setAttribute("data-bs-target", "#exampleModal")
-	divBtn.setAttribute("data-edit-id", "2")
-	divBtn.innerText = "Edit"
-	return divBtn
-}
+// const editButton = () => {
+// 	const divBtn = document.createElement("button")
+// 	divBtn.setAttribute("type", "button")
+// 	divBtn.setAttribute("data-bs-toggle", "modal")
+// 	divBtn.setAttribute("data-bs-target", "#exampleModal")
+// 	divBtn.setAttribute("data-edit-id", "2")
+// 	divBtn.innerText = "Edit"
+// 	return divBtn
+// }
 
 function writeDom() {
 	if (!carsList) return
@@ -120,7 +145,7 @@ function writeDom() {
 		<div class="btn-group">
 											<button
 												type="button"
-												class="btn btn-sm btn-outline-secondary view"
+												class="btn btn-sm btn-outline-secondary edit"
 												data-bs-toggle="modal" data-bs-target="#exampleModal"
 												data-edit-id="${game.id}"
 											>
