@@ -77,31 +77,35 @@ function editModal(gameId) {
 			}
 			res.json().then((data) => {
 				console.log(data)
+				const selectedCar = data
+
+				// Injectez le formulaire dans le corps du modal
+				fetch("./form.html").then((data) => {
+					console.log(selectedCar)
+
+					data.text().then((form) => {
+						// Modifiez le titre et le corps du modal
+
+						modifyModal("Mode Edition", form)
+						modifyFom({
+							title: selectedCar.carName,
+							year: selectedCar.carYear,
+							imageUrl: selectedCar.carImage,
+						})
+						document
+							.querySelector('button[type="submit"]')
+							.addEventListener("click", () =>
+								updateGames(title.value, year.value, imageUrl.value, gameId)
+							)
+					})
+				})
 			})
 		})
 		.catch((error) =>
 			console.error("Erreur lors de la récupération des voitures :", error)
 		)
 
-	const result = carsList.findIndex((game) => game.id === parseInt(gameId))
-	// Injectez le formulaire dans le corps du modal
-	fetch("./form.html").then((data) => {
-		data.text().then((form) => {
-			// Modifiez le titre et le corps du modal
-			const selectedGame = carsList[result]
-			modifyModal("Mode Edition", form)
-			modifyFom({
-				title: selectedGame.title,
-				year: selectedGame.year,
-				imageUrl: selectedGame.imageUrl,
-			})
-			document
-				.querySelector('button[type="submit"]')
-				.addEventListener("click", () =>
-					updateGames(title.value, year.value, imageUrl.value, gameId)
-				)
-		})
-	})
+	// const result = carsList.findIndex((game) => game.id === parseInt(gameId))
 }
 
 function modifyFom(gameData) {
