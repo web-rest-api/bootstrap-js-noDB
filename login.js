@@ -82,7 +82,7 @@ function logIn(formdata) {
 				localStorage.setItem("_id", data._id)
 				localStorage.setItem("token", data.token)
 				localStorage.setItem("img", data.userImg)
-				// window.location.pathname = "/"
+				window.location.pathname = "/"
 			})
 		})
 		.catch((error) => {

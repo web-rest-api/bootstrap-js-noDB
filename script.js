@@ -30,33 +30,52 @@ fetch("http://localhost:3000/api/cars", {
 					editModal(e.target.getAttribute("data-edit-id"))
 				})
 			})
+			let viewButtons = document.querySelectorAll(".view")
+			viewButtons.forEach((btn) => {
+				btn.addEventListener("click", (e) => {
+					viewModal(e.target.getAttribute("data-edit-id"))
+				})
+			})
 		})
 	})
 	.catch((error) =>
 		console.error("Erreur lors de la récupération des voitures :", error)
 	)
 
-let viewButtons = document.querySelectorAll(".view")
-viewButtons.forEach((btn) => {
-	btn.addEventListener("click", (e) => {
-		viewModal(e.target.getAttribute("data-edit-id"))
-	})
-})
-
 function viewModal(gameId) {
 	// console.log(gameId, carsList)
 	// Trouvez le jeu en fonction de son identifiant
-	const result = carsList.findIndex((game) => game.id === parseInt(gameId))
-	// passer une image comme corps du modal
-	const modalBody = `<img src="${carsList[result].imageUrl}" alt="${carsList[result].title}" class="img-fluid" />`
-	modifyModal(carsList[result].title, modalBody)
-	// edit footer
-	// Écrire dans le footer
-	document.querySelector(".modal-footer").innerHTML = `
+	// const result = carsList.findIndex((game) => game.id === parseInt(gameId))
+	fetch(`http://localhost:3000/api/cars/${gameId}`, {
+		method: "GET",
+		headers: {
+			"x-api-key": "secret_phrase_here",
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+	})
+		.then((res) => {
+			if (!res.ok) {
+				throw new Error("Error with the car with this id")
+			}
+			res.json().then((data) => {
+				console.log(data)
+				const selectedCar = data
+				// passer une image comme corps du modal
+				const modalBody = `<img src="${selectedCar.carImage}" alt="${selectedCar.carName}" class="img-fluid" />`
+				modifyModal(selectedCar.carName, modalBody)
+				// edit footer
+				// Écrire dans le footer
+				document.querySelector(".modal-footer").innerHTML = `
 		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
 			Close
 		</button>
 </form>`
+			})
+		})
+		.catch((error) =>
+			console.error("Erreur lors de la récupération des voitures :", error)
+		)
 }
 
 function editModal(gameId) {
@@ -92,11 +111,14 @@ function editModal(gameId) {
 							year: selectedCar.carYear,
 							imageUrl: selectedCar.carImage,
 						})
+						document.querySelector(".form-img").src = selectedCar.carImage
 						document
 							.querySelector('button[type="submit"]')
-							.addEventListener("click", () =>
+							.addEventListener("click", () => {
+								console.log(title.value, year.value, imageUrl.value, gameId)
+
 								updateGames(title.value, year.value, imageUrl.value, gameId)
-							)
+							})
 					})
 				})
 			})
@@ -104,8 +126,6 @@ function editModal(gameId) {
 		.catch((error) =>
 			console.error("Erreur lors de la récupération des voitures :", error)
 		)
-
-	// const result = carsList.findIndex((game) => game.id === parseInt(gameId))
 }
 
 function modifyFom(gameData) {
@@ -128,16 +148,6 @@ function modifyModal(modalTitle, modalBody) {
 		<button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Submit</button>
 </form>`
 }
-
-// const editButton = () => {
-// 	const divBtn = document.createElement("button")
-// 	divBtn.setAttribute("type", "button")
-// 	divBtn.setAttribute("data-bs-toggle", "modal")
-// 	divBtn.setAttribute("data-bs-target", "#exampleModal")
-// 	divBtn.setAttribute("data-edit-id", "2")
-// 	divBtn.innerText = "Edit"
-// 	return divBtn
-// }
 
 function writeDom() {
 	if (!carsList) return
@@ -188,13 +198,32 @@ function writeDom() {
 	})
 }
 
-function updateGames(title, year, imageUrl, gameId) {
-	// Trouvez le jeu en fonction de son identifiant
-	const index = carsList.findIndex((game) => game.id === parseInt(gameId))
+function updateGames(title, year, imageUrl, carId) {
+	// Créez un objet de données à envoyer au backend.
+	const formdata = {
+		title,
+		year,
+		imageUrl,
+		carId,
+	}
+	// fetch car by ID // http://localhost:3000/api/cars/1
+	fetch(`http://localhost:3000/api/cars/${carId}`, {
+		method: "PUT",
+		headers: {
+			"x-api-key": "secret_phrase_here",
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+		body: JSON.stringify(formdata),
+	}).then((res) => {
+		res.json().then((data) => {
+			console.log(data)
+		})
+	})
 
-	carsList[index].title = title
-	carsList[index].year = year
-	carsList[index].imageUrl = imageUrl
+	// carsList[index].title = title
+	// carsList[index].year = year
+	// carsList[index].imageUrl = imageUrl
 	document.querySelector(".row").innerHTML = "" // Nous supprimons toutes les données des jeux dans le DOM.
 	writeDom()
 	editButtons = document.querySelectorAll(".edit")

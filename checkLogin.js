@@ -3,7 +3,6 @@ window.loggedIn = false
 function checkLogIn() {
 	const token = localStorage.getItem("token")
 	const url = "http://localhost:3000/api/users/check"
-	//console.log(token)
 
 	fetch(url, {
 		method: "POST",
@@ -72,8 +71,6 @@ function checkLogIn() {
 		.catch((error) => {
 			console.log(error)
 		})
-
-	//console.log(token)
 }
 
 checkLogIn()
